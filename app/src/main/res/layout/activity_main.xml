@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0f0a1a">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_gravity="top"
+        android:max="100"
+        android:progress="0"
+        android:visibility="gone"
+        android:progressTint="#a78bfa" />
+
+    <LinearLayout
+        android:id="@+id/status_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:background="#F00f0a1a">
+
+        <ImageView
+            android:layout_width="108dp"
+            android:layout_height="108dp"
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="@string/app_name"
+            android:layout_marginBottom="18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TITI"
+            android:textColor="#f472b6"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="V75 · LLL storage"
+            android:textColor="#a78bfa"
+            android:textSize="13sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/connecting"
+            android:textColor="#e9d5ff"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp"
+            android:gravity="center"
+            android:layout_marginBottom="22dp" />
+
+        <Button
+            android:id="@+id/btn_retry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/retry"
+            android:backgroundTint="#7c3aed"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btn_guide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/guide"
+            android:backgroundTint="#2e1065"
+            android:textColor="#c4b5fd" />
+    </LinearLayout>
+</FrameLayout>

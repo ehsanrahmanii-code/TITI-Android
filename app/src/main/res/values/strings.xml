@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TITI</string>
+    <string name="boot_engine">Starting TITI…\nFirst launch may take a minute.\nPlease wait.</string>
+    <string name="connecting">Connecting to dashboard…</string>
+    <string name="engine_offline">Engine not ready.\nPut your engine file here:\nInternal Storage/LLL/TITAN_PRO_V75_PWA.py\nThen tap Retry.</string>
+    <string name="engine_result">Status: %1$s</string>
+    <string name="engine_fail">Error: %1$s</string>
+    <string name="retry">Retry</string>
+    <string name="guide">Guide</string>
+    <string name="guide_full">TITI · V75\n\nData folder:\nInternal Storage/LLL\n\n1) Copy engine file to:\n   Internal Storage/LLL/TITAN_PRO_V75_PWA.py\n\n2) Close and reopen the app\n\n3) Internet required for market data\n\n4) Optional API keys: LLL/secrets\n\n5) Analysis only — no live orders</string>
+</resources>
