@@ -1,27 +1,18 @@
-# TITI — Android APK
+# TITI — Android APK (full V75 embedded)
 
 **App name:** TITI · **Package:** `com.titi.app` · **Version:** 7.5.0
 
-## Download APK
+Full analysis engine is **inside the APK**. No shell page. No external engine file required.
 
-1. Open [Actions](https://github.com/ehsanrahmanii-code/TITI-Android/actions)
-2. Open the latest **green** run
-3. Download artifact **TITI-7.5-apk**
-4. Install `app-debug.apk`
-5. Grant **All files access** permission
+## Download
 
-## Full engine (your code)
-
-Copy your file to:
-
-```
-Internal Storage/LLL/TITAN_PRO_V75_PWA.py
-```
-
-Then close and reopen the app. Dashboard runs on `http://127.0.0.1:8080`.
+1. [Actions](https://github.com/ehsanrahmanii-code/TITI-Android/actions) → latest green run
+2. Artifact **TITI-7.5-full-apk** → install `app-debug.apk`
+3. Grant **All files access**
+4. Open **TITI** → full dashboard on `http://127.0.0.1:8080`
 
 ## Storage
 
-Only: `/storage/emulated/0/LLL`
+`/storage/emulated/0/LLL` (fallback: app private files)
 
-Analysis only — no live order execution.
+Analysis only — no live orders.

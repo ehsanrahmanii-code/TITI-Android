@@ -1,12 +1,10 @@
-"""TITI bootstrap — load full V75 from LLL, else embedded shell."""
+"""TITI bootstrap — always run embedded full engine on port 8080."""
 from __future__ import annotations
 
-import importlib.util
 import os
 import sys
 import threading
 import traceback
-from pathlib import Path
 
 _started = False
 _lock = threading.Lock()
@@ -59,31 +57,6 @@ def _prepare_android_home() -> str:
     return home
 
 
-def _load_full_engine(home: str):
-    names = (
-        "TITAN_PRO_V75_PWA.py",
-        "TITAN_PRO_V75.py",
-        "titan_engine_full.py",
-        "titan.py",
-    )
-    roots = [Path(home), Path(home) / "engine", Path(home) / "data"]
-    for root in roots:
-        for name in names:
-            path = root / name
-            try:
-                if path.is_file() and path.stat().st_size > 100_000:
-                    spec = importlib.util.spec_from_file_location("titan_engine_full", str(path))
-                    if spec is None or spec.loader is None:
-                        continue
-                    mod = importlib.util.module_from_spec(spec)
-                    sys.modules["titan_engine_full"] = mod
-                    spec.loader.exec_module(mod)
-                    return mod, str(path)
-            except Exception:
-                continue
-    return None, None
-
-
 def start_server() -> str:
     global _started
     with _lock:
@@ -99,16 +72,10 @@ def start_server() -> str:
             _status["message"] = f"LLL:{home}"
 
             _status["phase"] = "import"
-            full, eng_path = _load_full_engine(home)
-            if full is not None:
-                te = full
-                _status["engine"] = f"full:{eng_path}"
-                _status["message"] = f"full {eng_path}"
-            else:
-                import titan_engine as te
+            import titan_engine as te
 
-                _status["engine"] = "shell"
-                _status["message"] = "shell — put V75 in LLL for full"
+            _status["engine"] = "full"
+            _status["message"] = "full engine"
 
             _status["phase"] = "serve"
             if hasattr(te, "run_titan"):
@@ -121,7 +88,7 @@ def start_server() -> str:
                 except Exception:
                     te.app.run(host="0.0.0.0", port=8080, threaded=True, use_reloader=False)
             else:
-                raise RuntimeError("no run_titan")
+                raise RuntimeError("no run_titan in engine")
             _status["ok"] = True
             _status["phase"] = "stopped"
         except Exception as exc:
@@ -130,7 +97,7 @@ def start_server() -> str:
             _status["message"] = "error"
             _status["phase"] = "error"
 
-    threading.Thread(target=_run, name="titi-v75", daemon=True).start()
+    threading.Thread(target=_run, name="titi-full", daemon=True).start()
     return "booting"
 
 
