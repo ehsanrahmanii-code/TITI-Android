@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TITI</string>
-    <string name="boot_engine">Starting TITI…\nFirst launch may take a minute.\nPlease wait.</string>
-    <string name="connecting">Connecting to dashboard…</string>
-    <string name="engine_offline">Engine not ready.\nPut your engine file here:\nInternal Storage/LLL/TITAN_PRO_V75_PWA.py\nThen tap Retry.</string>
-    <string name="engine_result">Status: %1$s</string>
-    <string name="engine_fail">Error: %1$s</string>
+    <string name="boot_engine">TITI starting…\nPlease wait.</string>
+    <string name="connecting">Connecting…</string>
+    <string name="engine_offline">Engine not found.\n\n1) Grant All files access\n2) Copy TITAN_PRO_V75_PWA.py to:\n   Internal Storage/LLL/\n3) Reopen TITI</string>
+    <string name="engine_result">%1$s</string>
+    <string name="engine_fail">%1$s</string>
     <string name="retry">Retry</string>
     <string name="guide">Guide</string>
-    <string name="guide_full">TITI · V75\n\nData folder:\nInternal Storage/LLL\n\n1) Copy engine file to:\n   Internal Storage/LLL/TITAN_PRO_V75_PWA.py\n\n2) Close and reopen the app\n\n3) Internet required for market data\n\n4) Optional API keys: LLL/secrets\n\n5) Analysis only — no live orders</string>
+    <string name="guide_full">TITI\n\n1) Settings → Apps → TITI → All files access ON\n\n2) Copy your file to:\nInternal Storage/LLL/TITAN_PRO_V75_PWA.py\n\n3) Close TITI completely and open again\n\nFull dashboard loads automatically.</string>
 </resources>

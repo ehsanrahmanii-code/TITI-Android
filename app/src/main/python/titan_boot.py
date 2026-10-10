@@ -1,14 +1,24 @@
-"""TITI bootstrap — always run embedded full engine on port 8080."""
+"""TITI bootstrap — load FULL V75 from LLL path, never show shell page if engine exists."""
 from __future__ import annotations
 
+import importlib.util
 import os
 import sys
 import threading
 import traceback
+from pathlib import Path
 
 _started = False
 _lock = threading.Lock()
 _status = {"ok": False, "message": "idle", "error": None, "phase": "idle", "engine": None}
+
+ENGINE_NAMES = (
+    "TITAN_PRO_V75_PWA.py",
+    "TITAN_PRO_V75.py",
+    "titan_engine_full.py",
+    "titan.py",
+    "TITI.py",
+)
 
 
 def status() -> dict:
@@ -57,6 +67,43 @@ def _prepare_android_home() -> str:
     return home
 
 
+def _try_load_path(path: Path):
+    try:
+        if not path.is_file():
+            return None
+        if path.stat().st_size < 100_000:
+            return None
+        spec = importlib.util.spec_from_file_location("titan_engine_full", str(path))
+        if spec is None or spec.loader is None:
+            return None
+        mod = importlib.util.module_from_spec(spec)
+        sys.modules["titan_engine_full"] = mod
+        spec.loader.exec_module(mod)
+        return mod
+    except Exception:
+        return None
+
+
+def _load_full_engine(home: str):
+    # Always scan absolute LLL paths first (even if HOME fell back to app private)
+    scan_roots = [
+        Path("/storage/emulated/0/LLL"),
+        Path("/sdcard/LLL"),
+        Path("/storage/self/primary/LLL"),
+        Path(home),
+        Path(home) / "engine",
+        Path(home) / "data",
+        Path("/storage/emulated/0/Download"),
+        Path("/sdcard/Download"),
+    ]
+    for root in scan_roots:
+        for name in ENGINE_NAMES:
+            mod = _try_load_path(root / name)
+            if mod is not None:
+                return mod, str(root / name)
+    return None, None
+
+
 def start_server() -> str:
     global _started
     with _lock:
@@ -72,10 +119,27 @@ def start_server() -> str:
             _status["message"] = f"LLL:{home}"
 
             _status["phase"] = "import"
-            import titan_engine as te
+            full, eng_path = _load_full_engine(home)
+            if full is not None:
+                te = full
+                _status["engine"] = f"full:{eng_path}"
+                _status["message"] = f"full {eng_path}"
+            else:
+                # Try embedded titan_engine only if it is the full engine (>100KB)
+                import titan_engine as te
 
-            _status["engine"] = "full"
-            _status["message"] = "full engine"
+                path = getattr(te, "__file__", "") or ""
+                try:
+                    sz = os.path.getsize(path) if path else 0
+                except Exception:
+                    sz = 0
+                if sz < 100_000:
+                    raise RuntimeError(
+                        "ENGINE_MISSING: copy TITAN_PRO_V75_PWA.py to "
+                        "/storage/emulated/0/LLL/ then reopen app"
+                    )
+                _status["engine"] = "embedded"
+                _status["message"] = "embedded full"
 
             _status["phase"] = "serve"
             if hasattr(te, "run_titan"):
@@ -104,5 +168,5 @@ def start_server() -> str:
 def get_status_text() -> str:
     s = status()
     if s.get("error"):
-        return "error: " + str(s["error"])[:400]
+        return "error: " + str(s["error"])[:500]
     return f"{s.get('phase')}: {s.get('message')} [{s.get('engine') or ''}]"
