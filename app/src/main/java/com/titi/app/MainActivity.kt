@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -59,9 +62,28 @@ class MainActivity : AppCompatActivity() {
         btnGuide.setOnClickListener {
             statusText.text = getString(R.string.guide_full)
             statusPanel.visibility = View.VISIBLE
+            requestAllFilesAccess()
         }
         statusText.text = getString(R.string.boot_engine)
+        requestAllFilesAccess()
         startEngineAndLoad()
+    }
+
+    private fun requestAllFilesAccess() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                try {
+                    val i = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                    i.data = Uri.parse("package:$packageName")
+                    startActivity(i)
+                } catch (_: Exception) {
+                    try {
+                        val i = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                        startActivity(i)
+                    } catch (_: Exception) {}
+                }
+            }
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -113,9 +135,9 @@ class MainActivity : AppCompatActivity() {
         progress.visibility = View.VISIBLE
         io.execute {
             try {
-                handler.post { statusText.text = "Python runtime…" }
+                handler.post { statusText.text = "Python…" }
                 if (!Python.isStarted()) Python.start(AndroidPlatform(applicationContext))
-                handler.post { statusText.text = "Starting TITI…" }
+                handler.post { statusText.text = "TITI…" }
                 if (engineStarted.compareAndSet(false, true) || !probeEngine()) {
                     if (engineStarting.compareAndSet(false, true)) {
                         try {
